@@ -1,4 +1,4 @@
-class Vacancy:
+class Vacancies:
     """Класс для работы с вакансиями"""
 
     __slots__ = ("name", "alternate_url", "salary_from", "salary_to", "area_name", "requirement", "responsibility")
@@ -29,19 +29,19 @@ class Vacancy:
         return self.salary_from < other.salary_from
 
     @classmethod
-    def from_hh_dict(cls, vacancy_data: dict):
+    def from_hh_dict(cls, vacancies_data: dict):
         """Возвращает экземпляр класса в виде списка"""
 
-        salary = vacancy_data.get("salary")
+        salary = vacancies_data.get("salary")
 
         return cls(
-            vacancy_data["name"],
-            vacancy_data["alternate_url"],
+            vacancies_data["name"],
+            vacancies_data["alternate_url"],
             salary.get("from") if salary.get("from") else 0,
             salary.get("to") if salary.get("to") else 0,
-            vacancy_data["area"]["name"],
-            vacancy_data["snippet"]["requirement"],
-            vacancy_data["snippet"]["responsibility"],
+            vacancies_data["area"]["name"],
+            vacancies_data["snippet"]["requirement"],
+            vacancies_data["snippet"]["responsibility"],
         )
 
     def to_dict(self) -> dict:
