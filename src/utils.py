@@ -1,28 +1,18 @@
-import os
-from src.api import HeadHunterAPI
-from src.json_saver import JSONSaver
-from src.vacancies import Vacancy
+def top_vacancy(number, my_list):
+    """Функция вакансий для пользователя"""
+    if number == "":
+        return my_list
+    else:
+        return my_list[0:int(number)]
 
-VACANCIES_PATH_JSON = os.path.join(os.path.dirname(__file__), "../data", "vacancies.json")
 
-def user_choice_json():
-    """Функция для работы с пользователем, записи в json-файл"""
-
-    keyword = input("Какую профессию ищите?\n").lower()
-    per_page = int(input("Сколько профессии вывести?\n"))
-
-    hh_api = HeadHunterAPI()
-    vacancies = hh_api.get_vacancies(keyword, per_page)
-    vacancies = [Vacancy.from_hh_dict(vacancy) for vacancy in vacancies]
-    vacancies = sorted(vacancies, reverse=True)
-
-    print("Топ выбранных вакансии с 'HeadHunter' по зарплате: \n")
-    for i in sorted(vacancies, reverse=True):
-        print(i)
-
-    vacancies = [vacancy.to_dict() for vacancy in vacancies]
-    saver = JSONSaver(VACANCIES_PATH_JSON)
-
-    saver.write_data(vacancies)
-    saver.get_data()
-    print("Данные записаны в json-файл")
+def filter_vacancy(my_list, words_list):
+    """Функция фильтрации вакансий по ключевым словам в описании или названия вакансии"""
+    fin_list = []
+    for index in my_list:
+        for i in words_list:
+            if index["description"] is None:
+                continue
+            elif i in index["description"] or i in index["name"]:
+                fin_list.append(index)
+    return fin_list
